@@ -3,9 +3,9 @@
 Single-page Hebrew/RTL app: you describe your ideology in free text, and the page
 ranks the 14 Knesset-26 lists against it, with public live usage stats below.
 
-The input calls the `jev-questions` Supabase Edge Function. The local scorer keeps
-the ranked breakdown immediate; successful requests record only aggregate stats,
-never ideology text or user IDs.
+The input calls the `jev-questions` Supabase Edge Function. The recommendation section
+renders only after that response returns; successful requests record only aggregate
+stats, never ideology text or user IDs.
 
 ## Run
 
@@ -45,7 +45,7 @@ supabase/migrations/        aggregate stats table/functions and locked-down gran
 
 ## Backend
 
-- `jev-questions` accepts `{ ideology }`, calls TypeSafe, returns the JEV answer, and records one aggregate five-minute bucket after success.
+- `jev-questions` accepts `{ ideology }`, calls TypeSafe with the same four-axis party profiles used by the frontend, returns a ranked UI result, and records one aggregate five-minute bucket after success.
 - `jev-stats` is public (`GET`) and returns totals, last-hour volume, leader, latency, comparison deltas, and the 24-hour sparkline used by `TrendsSection`.
 - `analysis_stats_5m` stores only counters, latency totals, and party counts. RLS is enabled and only the Edge Functions' service role can access the RPCs.
 
@@ -61,7 +61,7 @@ __jabSelfCheck()
 
 It asserts negation flips an axis, an empty signal stays centred at 0.5, no text can
 saturate an axis, all 14 lists come back scored and sorted, the top-five model carries
-rank/score/opacity, and the CTA click really reveals five ranked rows.
+rank/score/opacity, and the CTA keeps the recommendation hidden until JEV responds.
 
 ## Stats data
 

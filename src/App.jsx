@@ -5,7 +5,6 @@ import AnswerPanel from './components/AnswerPanel.jsx';
 import TrendsSection from './components/TrendsSection.jsx';
 import MethodSection from './components/MethodSection.jsx';
 import SiteFooter from './components/SiteFooter.jsx';
-import { runAnalysis } from './lib/analyze.js';
 import { askJev } from './lib/backend.js';
 
 const STORE_KEY = 'jab.partyAdvisor.v2';
@@ -20,11 +19,11 @@ function readSavedRun() {
 }
 
 export default function App() {
-  /* One read drives both halves of the restore: the text the composer
-     starts with and the result shown below it. */
+  /* Restore the draft text, but require a fresh JEV answer before showing
+     the recommendation section. */
   const [saved] = useState(readSavedRun);
-  const [run, setRun] = useState(() =>
-    saved ? { id: 1, result: runAnalysis(saved.text), scroll: false } : null);
+  const [run, setRun] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const nextId = useRef(1);
 
   const analyze = useCallback(text => {
@@ -33,18 +32,29 @@ export default function App() {
     } catch {
       /* storage may be blocked — the run still works, it just is not remembered */
     }
-    nextId.current += 1;
-    setRun({ id: nextId.current, result: runAnalysis(text), scroll: true });
-    // The local result keeps the UI immediate; the edge function is the
-    // authoritative JEV request and records the completed analysis for stats.
-    askJev(text).catch(error => console.warn('jev-questions unavailable', error.message));
+    const requestId = nextId.current + 1;
+    nextId.current = requestId;
+    setRun(null);
+    setIsAnalyzing(true);
+
+    askJev(text)
+      .then(answer => {
+        if (requestId !== nextId.current) return;
+        if (!answer?.result?.ranked?.length) throw new Error('JEV returned no ranked result');
+        setRun({ id: requestId, result: answer.result, scroll: true });
+        setIsAnalyzing(false);
+      })
+      .catch(error => {
+        if (requestId === nextId.current) setIsAnalyzing(false);
+        console.warn('jev-questions unavailable', error.message);
+      });
   }, []);
 
   return (
     <>
       <TopNav />
       <main id="content">
-        <Hero initialText={saved ? saved.text : ''} onAnalyze={analyze} />
+        <Hero initialText={saved ? saved.text : ''} onAnalyze={analyze} isAnalyzing={isAnalyzing} />
         {/* Keyed on the run id: a new analysis remounts the panel, which is
             what replays the entrance animation and re-inits the bars. */}
         <AnswerPanel key={run ? run.id : 'idle'} run={run} />

@@ -17,7 +17,7 @@ const MIN_CHARS = 8;
 const MAX_CHARS = 1200;
 const MAX_GROW = 420;
 
-export default function Hero({ initialText = '', onAnalyze }) {
+export default function Hero({ initialText = '', onAnalyze, isAnalyzing = false }) {
   const [text, setText] = useState(initialText);
   const [notice, setNotice] = useState('');
   const areaRef = useRef(null);
@@ -38,6 +38,7 @@ export default function Hero({ initialText = '', onAnalyze }) {
   }, []);
 
   function submit() {
+    if (isAnalyzing) return;
     const value = text.trim();
     if (value.length < MIN_CHARS) {
       setNotice(TOO_SHORT);
@@ -93,7 +94,18 @@ export default function Hero({ initialText = '', onAnalyze }) {
           />
           <div className="composer-foot">
             <span className="counter" dir="ltr"><span id="charCount">{text.length}</span> / {MAX_CHARS}</span>
-            <button className="btn btn-primary" type="button" id="analyzeBtn" data-od-id="analyze-cta" onClick={submit}>ג'ב, תנתח לי</button>
+            <button
+              className="btn btn-primary"
+              type="button"
+              id="analyzeBtn"
+              data-od-id="analyze-cta"
+              onClick={submit}
+              disabled={isAnalyzing}
+              aria-busy={isAnalyzing}
+            >
+              {isAnalyzing && <span className="button-spinner" aria-hidden="true" />}
+              {isAnalyzing ? 'ג\'ב מנתח...' : 'ג\'ב, תנתח לי'}
+            </button>
           </div>
         </form>
 

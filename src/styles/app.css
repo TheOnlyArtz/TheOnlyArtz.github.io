@@ -134,7 +134,12 @@ h3, .h3 {
 }
 .btn-primary:hover { background: color-mix(in oklab, var(--fg), white 14%); }
 .btn-primary:active { background: color-mix(in oklab, var(--fg), white 4%); }
-.btn-primary[disabled] { opacity: 0.45; cursor: not-allowed; transform: none; }
+.btn-primary[disabled] { opacity: 0.65; cursor: wait; transform: none; }
+.button-spinner {
+  width: 13px; height: 13px; border: 2px solid currentColor; border-left-color: transparent;
+  border-radius: 50%; animation: button-spin 700ms linear infinite;
+}
+@keyframes button-spin { to { transform: rotate(360deg); } }
 .btn-secondary {
   background: var(--surface); color: var(--fg); border-color: transparent;
   box-shadow: var(--elev-ring);

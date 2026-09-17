@@ -38,6 +38,8 @@ export default function AnswerPanel({ run }) {
     };
   }, [run]);
 
+  if (!run) return null;
+
   return (
     <section
       ref={sectionRef}
@@ -45,16 +47,11 @@ export default function AnswerPanel({ run }) {
       id="answer"
       data-od-id="answer"
       aria-live="polite"
-      hidden={!run}
     >
       <div className="container answer-inner">
-        {run && (
-          <>
-            <Verdict result={run.result} />
-            <RankList result={run.result} isIn={isIn} />
-            <Reasoning result={run.result} isIn={isIn} />
-          </>
-        )}
+        <Verdict result={run.result} />
+        <RankList result={run.result} isIn={isIn} />
+        <Reasoning result={run.result} isIn={isIn} />
       </div>
     </section>
   );

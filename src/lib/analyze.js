@@ -3,18 +3,11 @@ import { PARTIES } from '../data/parties.js';
 import { LEX, NEG } from '../data/lexicon.js';
 
 /* ═══════════════════════════════════════════════════════════════════════
- * The scoring engine — free text → axis vector → ranked lists.
+ * The legacy deterministic scorer — free text → axis vector → ranked lists.
  *
- * This is a deterministic, in-page stand-in for a backend endpoint. The
- * seam is deliberately narrow: exactly one function (`runAnalysis`) is
- * called from the UI, so switching to a server means replacing this file
- * and awaiting the result in `useAnalysisRun`.
- *
- * Note on the existing Supabase function in `supabase/functions/jev-questions`:
- * it answers with a single `{ answer }` choice ("Party to elect"), not a
- * ranked top-five. Wiring it up therefore needs either a client-side
- * ranking around a single verdict, or a richer server response — a
- * product decision, not a port decision.
+ * The live recommendation now comes from the `jev-questions` Edge Function.
+ * This module remains as a small local self-check for the original axis model;
+ * it is not used to render the recommendation section.
  * ═══════════════════════════════════════════════════════════════════════ */
 
 export const clamp = (n, a, b) => Math.min(b, Math.max(a, n));

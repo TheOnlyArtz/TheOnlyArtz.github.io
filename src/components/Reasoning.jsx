@@ -1,40 +1,41 @@
 import { AXES } from '../data/axes.js';
 
 export default function Reasoning({ result, isIn }) {
-  const top = result.ranked[0];
+  const top = result.selected || result.ranked[0];
+  const confidence = result.confidence == null ? '—' : `${result.confidence}%`;
 
   return (
     <>
       <div className="grid-2 why-grid">
         <div className="why">
-          <h3>מה זיהיתי בדברים שלך</h3>
+          <h3>תשובת ג'ב</h3>
           <div className="signal-row">
-            {result.signals.length
-              ? result.signals.slice(0, 8).map(s => <span className="tag" key={s.label}>{s.label}</span>)
-              : <span className="tag">לא זוהו מונחי עמדה</span>}
+            <span className="tag tag-strong">{top.name}</span>
+            <span className="tag">ביטחון: {confidence}</span>
+            {result.model && <span className="tag">מודל: {result.model}</span>}
           </div>
-          <p className="meta why-note">מונחים שזוהו בטקסט, אחרי התחשבות בשלילה בהקשר.</p>
+          <p className="meta why-note">הבחירה והדירוג התקבלו מ־JEV לאחר עיבוד התשובה שלכם.</p>
         </div>
 
         <div className="why">
-          <h3>התאמה לפי ציר — {top.name}</h3>
+          <h3>מיפוי הרשימה לפי ציר — {top.name}</h3>
           <div className="axis-list">
             {AXES.map(a => {
-              const known = result.touched[a.id];
+              const value = top.axes?.[a.id];
               return (
-                <div className={`axis${known ? '' : ' is-prior'}`} key={a.id}>
+                <div className="axis" key={a.id}>
                   <span className="axis-label">{a.label}</span>
                   <span className="axis-track">
                     <span
                       className="axis-fill"
                       style={{
-                        '--w': isIn ? `${top.axes[a.id]}%` : '0%',
-                        '--fill-op': known ? '100%' : '30%'
+                        '--w': isIn && value != null ? `${value}%` : '0%',
+                        '--fill-op': value == null ? '30%' : '100%'
                       }}
                     />
                   </span>
-                  <span className={`axis-val${known ? '' : ' is-text'}`}>
-                    {known ? `${top.axes[a.id]}%` : 'לא הוזכר'}
+                  <span className={`axis-val${value == null ? ' is-text' : ''}`}>
+                    {value == null ? 'לא זמין' : `${value}%`}
                   </span>
                 </div>
               );
@@ -44,8 +45,8 @@ export default function Reasoning({ result, isIn }) {
       </div>
 
       <p className="meta why-foot">
-        צירים שכתבתם עליהם מקבלים משקל מלא; צירים שלא הוזכרו נשארים במשקל חלקי ולכן מסומנים
-        כ"לא הוזכר". הציון הוא אחוז ההתאמה המשוקלל בין הווקטור שלכם לוקטור של כל רשימה.
+        מיפוי הצירים הוא פרופיל העמדות של הרשימה, כפי שנשלח לקריטריוני JEV. הוא אינו סקר
+        ואינו מחליף קריאה של מצע הרשימה המלא.
       </p>
     </>
   );

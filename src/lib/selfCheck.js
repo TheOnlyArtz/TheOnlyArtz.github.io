@@ -18,23 +18,22 @@ function setTextareaValue(el, value) {
    which the vanilla version (which re-rendered the DOM directly) did not do.
    If the previous text was too short to analyze, there is nothing to
    re-render and the panel keeps this check's result until the next submit. */
-function ctaRevealsChoices() {
+function ctaWaitsForAnswer() {
   const area = document.getElementById('ideology');
   const button = document.getElementById('analyzeBtn');
-  const answer = document.getElementById('answer');
-  if (!area || !button || !answer) return false;
+  if (!area || !button) return false;
 
   const previous = area.value;
   setTextareaValue(area, CHECK_TEXT);
   button.click();
-  const shown = !answer.hidden && answer.querySelectorAll('.rank-row').length === 5;
+  const staysHiddenUntilJevAnswers = !document.getElementById('answer');
 
   setTextareaValue(area, previous);
   if (previous.trim().length >= 8) button.click();
   else {
     try { localStorage.removeItem(STORE_KEY); } catch { /* ignore */ }
   }
-  return shown;
+  return staysHiddenUntilJevAnswers;
 }
 
 export function installSelfCheck() {
@@ -55,7 +54,7 @@ export function installSelfCheck() {
       ['top-five model carries rank, score and bar opacity',
         model.length === 5 && model.every((m, i) => m.rank === i + 1 && m.score >= 0 && m.score <= 100 && m.op > 0)
           && model[0].score >= model[4].score],
-      ['the CTA click alone reveals the ranked choices', ctaRevealsChoices()]
+      ['the CTA keeps the answer hidden until JEV responds', ctaWaitsForAnswer()]
     ];
 
     const failed = checks.filter(c => !c[1]);
