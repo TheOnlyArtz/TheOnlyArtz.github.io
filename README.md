@@ -59,6 +59,10 @@ Open the browser console and run:
 __jabSelfCheck()
 ```
 
+For the backend access rules, run `npm run check:rls`. It asserts the public anon key
+is denied INSERT/UPDATE/DELETE on `analysis_stats_5m` and denied `record_analysis`,
+and exits non-zero if any write path opens up.
+
 It asserts negation flips an axis, an empty signal stays centred at 0.5, no text can
 saturate an axis, all 14 lists come back scored and sorted, the top-five model carries
 rank/score/opacity, and the CTA keeps the recommendation hidden until JEV responds.
