@@ -1,4 +1,5 @@
 import { AXIS_KEYS } from '../data/axes.js';
+import { PARTIES } from '../data/parties.js';
 import { runAnalysis, rankModel } from './analyze.js';
 
 const STORE_KEY = 'jab.partyAdvisor.v2';
@@ -49,8 +50,8 @@ export function installSelfCheck() {
         none.coverage === 0 && AXIS_KEYS.every(k => none.user[k] === 0.5)],
       ['a single text can never saturate an axis',
         AXIS_KEYS.every(k => saturate.user[k] >= 0.12 && saturate.user[k] <= 0.88)],
-      ['all 14 real lists come back scored and sorted',
-        none.ranked.length === 14 && none.ranked.every((p, i, r) => i === 0 || r[i - 1].score >= p.score)],
+      [`all ${PARTIES.length} real lists come back scored and sorted`,
+        none.ranked.length === PARTIES.length && none.ranked.every((p, i, r) => i === 0 || r[i - 1].score >= p.score)],
       ['top-five model carries rank, score and bar opacity',
         model.length === 5 && model.every((m, i) => m.rank === i + 1 && m.score >= 0 && m.score <= 100 && m.op > 0)
           && model[0].score >= model[4].score],

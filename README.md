@@ -1,9 +1,10 @@
 # ג'ב — יועצת בחירת מפלגה (React)
 
 Single-page Hebrew/RTL app: you describe your ideology in free text, and the page
-ranks the 14 Knesset-26 lists against it, with public live usage stats below.
+ranks the 17 Knesset-26 lists against it, with public live usage stats below.
 
-The input calls the `jev-questions` Supabase Edge Function. The recommendation section
+The input calls the `jev-questions` Supabase Edge Function, which sends the full
+manifesto of every list, verbatim, as the choice criteria. The recommendation section
 renders only after that response returns; successful requests record only aggregate
 stats, never ideology text or user IDs.
 
@@ -32,7 +33,9 @@ src/main.jsx               root render + console self-check
 src/App.jsx                run state, localStorage persistence, section order
 src/components/            TopNav · Hero (composer + chips) · AnswerPanel
                            (Verdict · RankList · Reasoning) · TrendsSection · MethodSection · SiteFooter
-src/data/                  axes.js · parties.js · lexicon.js — the engine's data
+src/data/                  axes.js · parties.js (generated) · lexicon.js — the engine's data
+preferredInput.json        the real manifestos, one string per list — the source of truth
+scripts/build-parties.mjs  regenerates every copy of the list from it
 src/lib/analyze.js         normalize → axis vector → ranked lists
 src/lib/backend.js         jev-questions + public jev-stats Edge Function calls
 src/lib/motion.js          prefers-reduced-motion
@@ -45,7 +48,7 @@ supabase/migrations/        aggregate stats table/functions and locked-down gran
 
 ## Backend
 
-- `jev-questions` accepts `{ ideology }`, calls TypeSafe with the same four-axis party profiles used by the frontend, returns a ranked UI result, and records one aggregate five-minute bucket after success.
+- `jev-questions` accepts `{ ideology }`, calls TypeSafe with the full manifesto of each of the 17 lists as the `Party to elect` choice criteria, returns a ranked UI result, and records one aggregate five-minute bucket after success.
 - `jev-stats` is public (`GET`) and returns totals, last-hour volume, leader, latency, comparison deltas, and the 24-hour sparkline used by `TrendsSection`.
 - `analysis_stats_5m` stores only counters, latency totals, and party counts. RLS is enabled and only the Edge Functions' service role can access the RPCs.
 
@@ -64,12 +67,27 @@ is denied INSERT/UPDATE/DELETE on `analysis_stats_5m` and denied `record_analysi
 and exits non-zero if any write path opens up.
 
 It asserts negation flips an axis, an empty signal stays centred at 0.5, no text can
-saturate an axis, all 14 lists come back scored and sorted, the top-five model carries
-rank/score/opacity, and the CTA keeps the recommendation hidden until JEV responds.
+saturate an axis, every list in `src/data/parties.js` comes back scored and sorted, the
+top-five model carries rank/score/opacity, and the CTA keeps the recommendation hidden
+until JEV responds.
 
 ## Stats data
 
 The KPI board is populated by the public `jev-stats` Edge Function and refreshes every
 30 seconds. With no completed backend analyses yet, it intentionally shows zeroes.
-Party names, leaders and the axis mapping are the real published lists; the mapping is
-a coarse reading of public platforms, which the method section states.
+Party names and leaders are the real published lists, and the manifestos JEV scores
+against are the parties' own text. The axis mapping is a coarse reading of those
+platforms, which the method section states.
+
+## Party data
+
+`preferredInput.json` holds the real manifestos — one string per list. Never edit the
+generated copies by hand; run:
+
+```bash
+node scripts/build-parties.mjs
+```
+
+It rewrites `JevQuestionsInput.json` (root and the Edge Function copy, whose criteria
+are those strings unchanged), the function's `parties.json`, and `src/data/parties.js`,
+and it fails loudly if a list has no axis profile or no leader.

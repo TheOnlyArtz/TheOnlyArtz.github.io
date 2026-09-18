@@ -1,0 +1,172 @@
+[
+  {
+    "name": "הליכוד",
+    "leader": "בנימין נתניהו",
+    "v": {
+      "security": 88,
+      "economy": 78,
+      "religion": 62,
+      "law": 85
+    }
+  },
+  {
+    "name": "ישראל ביתנו",
+    "leader": "אביגדור ליברמן",
+    "v": {
+      "security": 82,
+      "economy": 72,
+      "religion": 22,
+      "law": 48
+    }
+  },
+  {
+    "name": "הציונות הדתית",
+    "leader": "בצלאל סמוטריץ'",
+    "v": {
+      "security": 92,
+      "economy": 68,
+      "religion": 93,
+      "law": 88
+    }
+  },
+  {
+    "name": "עוצמה יהודית",
+    "leader": "איתמר בן גביר",
+    "v": {
+      "security": 97,
+      "economy": 62,
+      "religion": 88,
+      "law": 92
+    }
+  },
+  {
+    "name": "הימין הממלכתי",
+    "leader": "גדעון סער",
+    "v": {
+      "security": 88,
+      "economy": 72,
+      "religion": 55,
+      "law": 60
+    }
+  },
+  {
+    "name": "נעם",
+    "leader": "אבי מעוז",
+    "v": {
+      "security": 95,
+      "economy": 40,
+      "religion": 98,
+      "law": 92
+    }
+  },
+  {
+    "name": "זהות",
+    "leader": "משה פייגלין",
+    "v": {
+      "security": 80,
+      "economy": 97,
+      "religion": 10,
+      "law": 95
+    }
+  },
+  {
+    "name": "ביחד",
+    "leader": "נפתלי בנט ויאיר לפיד",
+    "v": {
+      "security": 72,
+      "economy": 60,
+      "religion": 42,
+      "law": 25
+    }
+  },
+  {
+    "name": "כחול לבן – המחנה הממלכתי",
+    "leader": "בני גנץ",
+    "v": {
+      "security": 68,
+      "economy": 55,
+      "religion": 40,
+      "law": 28
+    }
+  },
+  {
+    "name": "הדמוקרטים",
+    "leader": "יאיר גולן",
+    "v": {
+      "security": 35,
+      "economy": 22,
+      "religion": 15,
+      "law": 10
+    }
+  },
+  {
+    "name": "ישר!",
+    "leader": "גדי איזנקוט",
+    "v": {
+      "security": 70,
+      "economy": 52,
+      "religion": 35,
+      "law": 22
+    }
+  },
+  {
+    "name": "בית ציוני",
+    "leader": "חילי טרופר ויועז הנדל",
+    "v": {
+      "security": 78,
+      "economy": 55,
+      "religion": 35,
+      "law": 25
+    }
+  },
+  {
+    "name": "ש״ס",
+    "leader": "אריה דרעי",
+    "v": {
+      "security": 62,
+      "economy": 30,
+      "religion": 95,
+      "law": 70
+    }
+  },
+  {
+    "name": "יהדות התורה",
+    "leader": "יצחק גולדקנופף ומשה גפני",
+    "v": {
+      "security": 58,
+      "economy": 32,
+      "religion": 97,
+      "law": 78
+    }
+  },
+  {
+    "name": "רע״ם – הרשימה הערבית המאוחדת",
+    "leader": "מנסור עבאס",
+    "v": {
+      "security": 30,
+      "economy": 28,
+      "religion": 62,
+      "law": 12
+    }
+  },
+  {
+    "name": "חד״ש-תע״ל",
+    "leader": "איימן עודה ואחמד טיבי",
+    "v": {
+      "security": 12,
+      "economy": 10,
+      "religion": 8,
+      "law": 5
+    }
+  },
+  {
+    "name": "בל״ד – הברית הלאומית הדמוקרטית",
+    "leader": "סאמי אבו שחאדה",
+    "v": {
+      "security": 5,
+      "economy": 15,
+      "religion": 5,
+      "law": 2
+    }
+  }
+]
